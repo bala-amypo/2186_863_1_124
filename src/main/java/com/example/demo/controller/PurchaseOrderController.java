@@ -2,27 +2,44 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.PurchaseOrder;
 import com.example.demo.service.PurchaseOrderService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/purchase-orders")
+@RequestMapping("/api/purchase-orders")
 public class PurchaseOrderController {
 
-    private final PurchaseOrderService purchaseOrderService;
+    private final PurchaseOrderService service;
 
-    public PurchaseOrderController(PurchaseOrderService purchaseOrderService) {
-        this.purchaseOrderService = purchaseOrderService;
+    public PurchaseOrderController(PurchaseOrderService service) {
+        this.service = service;
     }
 
     @PostMapping
-    public PurchaseOrder createPurchaseOrder(@RequestBody PurchaseOrder purchaseOrder) {
-        return purchaseOrderService.createPurchaseOrder(purchaseOrder);
+    public ResponseEntity<PurchaseOrder> create(@RequestBody PurchaseOrder po) {
+        return new ResponseEntity<>(service.createPurchaseOrder(po), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PurchaseOrder> update(@PathVariable Long id, @RequestBody PurchaseOrder po) {
+        return ResponseEntity.ok(service.updatePurchaseOrder(id, po));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PurchaseOrder> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getPurchaseOrderById(id));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<PurchaseOrder>> getAll() {
+        return ResponseEntity.ok(service.getAllPurchaseOrders());
     }
 
     @GetMapping("/supplier/{supplierId}")
-    public List<PurchaseOrder> getOrdersBySupplier(@PathVariable Long supplierId) {
-        return purchaseOrderService.getPurchaseOrdersBySupplier(supplierId);
+    public ResponseEntity<List<PurchaseOrder>> getBySupplier(@PathVariable Long supplierId) {
+        return ResponseEntity.ok(service.getPurchaseOrdersBySupplier(supplierId));
     }
 }

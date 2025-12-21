@@ -2,32 +2,39 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.DiversityTarget;
 import com.example.demo.service.DiversityTargetService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/targets")
+@RequestMapping("/api/targets")
 public class DiversityTargetController {
 
-    private final DiversityTargetService diversityTargetService;
+    private final DiversityTargetService service;
 
-    public DiversityTargetController(DiversityTargetService diversityTargetService) {
-        this.diversityTargetService = diversityTargetService;
+    public DiversityTargetController(DiversityTargetService service) {
+        this.service = service;
     }
 
     @PostMapping
-    public DiversityTarget createTarget(@RequestBody DiversityTarget target) {
-        return diversityTargetService.createTarget(target);
+    public ResponseEntity<DiversityTarget> create(@RequestBody DiversityTarget target) {
+        return new ResponseEntity<>(service.createTarget(target), HttpStatus.CREATED);
     }
 
-    @GetMapping("/year/{year}")
-    public List<DiversityTarget> getTargetsByYear(@PathVariable int year) {
-        return diversityTargetService.getTargetsByYear(year);
+    @PutMapping("/{id}")
+    public ResponseEntity<DiversityTarget> update(@PathVariable Long id, @RequestBody DiversityTarget target) {
+        return ResponseEntity.ok(service.updateTarget(id, target));
     }
 
-    @PutMapping("/{id}/deactivate")
-    public void deactivateTarget(@PathVariable Long id) {
-        diversityTargetService.deactivateTarget(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<DiversityTarget> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getTargetById(id));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<DiversityTarget>> getAll() {
+        return ResponseEntity.ok(service.getAllTargets());
     }
 }
