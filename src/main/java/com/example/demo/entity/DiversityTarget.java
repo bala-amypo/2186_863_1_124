@@ -11,7 +11,9 @@ public class DiversityTarget {
     private Long id;
 
     private int targetYear;
+
     private Double targetPercentage;
+
     private Boolean active;
 
     @ManyToOne
@@ -31,45 +33,15 @@ public class DiversityTarget {
         if (active == null) active = true;
     }
 
-    // ===== GETTERS & SETTERS =====
+    public Long getId() { return id; }
+    public int getTargetYear() { return targetYear; }
+    public Double getTargetPercentage() { return targetPercentage; }
+    public Boolean getActive() { return active; }
+    public DiversityClassification getClassification() { return classification; }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public int getTargetYear() {
-        return targetYear;
-    }
-
-    public void setTargetYear(int targetYear) {
-        this.targetYear = targetYear;
-    }
-
-    public Double getTargetPercentage() {
-        return targetPercentage;
-    }
-
-    public void setTargetPercentage(Double targetPercentage) {
-        this.targetPercentage = targetPercentage;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-
-    public DiversityClassification getClassification() {
-        return classification;
-    }
-
-    public void setClassification(DiversityClassification classification) {
-        this.classification = classification;
-    }
+    public void setId(Long id) { this.id = id; }
+    public void setTargetYear(int targetYear) { this.targetYear = targetYear; }
+    public void setTargetPercentage(Double targetPercentage) { this.targetPercentage = targetPercentage; }
+    public void setActive(Boolean active) { this.active = active; }
+    public void setClassification(DiversityClassification classification) { this.classification = classification; }
 }

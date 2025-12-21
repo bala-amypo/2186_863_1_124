@@ -2,7 +2,7 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "suppliers")
@@ -18,15 +18,23 @@ public class Supplier {
     private String email;
 
     private String registrationNumber;
+
     private Boolean isActive;
+
     private LocalDateTime createdAt;
+
     private LocalDateTime updatedAt;
 
     @ManyToMany
-    private Set<DiversityClassification> diversityClassifications = new HashSet<>();
+    @JoinTable(
+            name = "supplier_classifications",
+            joinColumns = @JoinColumn(name = "supplier_id"),
+            inverseJoinColumns = @JoinColumn(name = "classification_id")
+    )
+    private Set<DiversityClassification> diversityClassifications;
 
     @OneToMany(mappedBy = "supplier")
-    private List<PurchaseOrder> purchaseOrders = new ArrayList<>();
+    private Set<PurchaseOrder> purchaseOrders;
 
     public Supplier() {}
 
@@ -42,82 +50,23 @@ public class Supplier {
         if (createdAt == null) createdAt = LocalDateTime.now();
     }
 
-    @PreUpdate
-    public void preUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
+    public Long getId() { return id; }
+    public String getName() { return name; }
+    public String getEmail() { return email; }
+    public String getRegistrationNumber() { return registrationNumber; }
+    public Boolean getIsActive() { return isActive; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public Set<DiversityClassification> getDiversityClassifications() { return diversityClassifications; }
+    public Set<PurchaseOrder> getPurchaseOrders() { return purchaseOrders; }
 
-    // ===== GETTERS & SETTERS =====
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-    
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getRegistrationNumber() {
-        return registrationNumber;
-    }
-
-    public void setRegistrationNumber(String registrationNumber) {
-        this.registrationNumber = registrationNumber;
-    }
-
-    public Boolean getIsActive() {
-        return isActive;
-    }
-
-    public void setIsActive(Boolean active) {
-        isActive = active;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public Set<DiversityClassification> getDiversityClassifications() {
-        return diversityClassifications;
-    }
-
-    public void setDiversityClassifications(Set<DiversityClassification> diversityClassifications) {
-        this.diversityClassifications = diversityClassifications;
-    }
-
-    public List<PurchaseOrder> getPurchaseOrders() {
-        return purchaseOrders;
-    }
-
-    public void setPurchaseOrders(List<PurchaseOrder> purchaseOrders) {
-        this.purchaseOrders = purchaseOrders;
-    }
+    public void setId(Long id) { this.id = id; }
+    public void setName(String name) { this.name = name; }
+    public void setEmail(String email) { this.email = email; }
+    public void setRegistrationNumber(String registrationNumber) { this.registrationNumber = registrationNumber; }
+    public void setIsActive(Boolean active) { isActive = active; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+    public void setDiversityClassifications(Set<DiversityClassification> diversityClassifications) { this.diversityClassifications = diversityClassifications; }
+    public void setPurchaseOrders(Set<PurchaseOrder> purchaseOrders) { this.purchaseOrders = purchaseOrders; }
 }
