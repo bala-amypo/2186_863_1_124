@@ -1,3 +1,9 @@
+package com.example.demo.entity;
+
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.*;
+
 @Entity
 @Table(name = "suppliers")
 public class Supplier {
@@ -12,18 +18,11 @@ public class Supplier {
     private String email;
 
     private String registrationNumber;
-
     private Boolean isActive;
-
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     @ManyToMany
-    @JoinTable(
-        name = "supplier_classifications",
-        joinColumns = @JoinColumn(name = "supplier_id"),
-        inverseJoinColumns = @JoinColumn(name = "classification_id")
-    )
     private Set<DiversityClassification> diversityClassifications = new HashSet<>();
 
     @OneToMany(mappedBy = "supplier")
@@ -43,9 +42,82 @@ public class Supplier {
         if (createdAt == null) createdAt = LocalDateTime.now();
     }
 
+    @PreUpdate
+    public void preUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+
+    // ===== GETTERS & SETTERS =====
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+    
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getRegistrationNumber() {
+        return registrationNumber;
+    }
+
+    public void setRegistrationNumber(String registrationNumber) {
+        this.registrationNumber = registrationNumber;
+    }
+
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean active) {
+        isActive = active;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
 
-    // getters and setters
+    public Set<DiversityClassification> getDiversityClassifications() {
+        return diversityClassifications;
+    }
+
+    public void setDiversityClassifications(Set<DiversityClassification> diversityClassifications) {
+        this.diversityClassifications = diversityClassifications;
+    }
+
+    public List<PurchaseOrder> getPurchaseOrders() {
+        return purchaseOrders;
+    }
+
+    public void setPurchaseOrders(List<PurchaseOrder> purchaseOrders) {
+        this.purchaseOrders = purchaseOrders;
+    }
 }
