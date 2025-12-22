@@ -17,17 +17,29 @@ public class DiversityClassificationServiceImpl implements DiversityClassificati
         this.repository = repository;
     }
 
-    @Override
-    public List<DiversityClassification> getAllClassifications() {
+    public DiversityClassification createClassification(DiversityClassification dc) {
+        return repository.save(dc);
+    }
+
+    public DiversityClassification updateClassification(Long id, DiversityClassification dc) {
+        DiversityClassification existing = getById(id);
+        existing.setCode(dc.getCode());
+        existing.setDescription(dc.getDescription());
+        return repository.save(existing);
+    }
+
+    public DiversityClassification getById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Classification not found"));
+    }
+
+    public List<DiversityClassification> getAll() {
         return repository.findAll();
     }
 
-    @Override
-    public void deactivateClassification(Long id) {
-        DiversityClassification classification = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Classification not found"));
-
-        classification.setActive(false);
-        repository.save(classification);
+    public void deactivate(Long id) {
+        DiversityClassification dc = getById(id);
+        dc.setActive(false);
+        repository.save(dc);
     }
 }
