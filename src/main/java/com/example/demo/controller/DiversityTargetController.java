@@ -24,17 +24,24 @@ public class DiversityTargetController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DiversityTarget> update(@PathVariable Long id, @RequestBody DiversityTarget target) {
+    public ResponseEntity<DiversityTarget> update(@PathVariable Long id,
+                                                  @RequestBody DiversityTarget target) {
         return ResponseEntity.ok(service.updateTarget(id, target));
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<DiversityTarget> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.getTargetById(id));
     }
 
     @GetMapping
     public ResponseEntity<List<DiversityTarget>> getAll() {
         return ResponseEntity.ok(service.getAllTargets());
+    }
+
+    @GetMapping("/year/{year}")
+    public ResponseEntity<List<DiversityTarget>> getByYear(@PathVariable int year) {
+        return ResponseEntity.ok(service.getTargetsByYear(year));
+    }
+
+    @PutMapping("/{id}/deactivate")
+    public ResponseEntity<Void> deactivate(@PathVariable Long id) {
+        service.deactivateTarget(id);
+        return ResponseEntity.noContent().build();
     }
 }

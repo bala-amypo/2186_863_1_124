@@ -20,21 +20,22 @@ public class DiversityTargetServiceImpl implements DiversityTargetService {
 
     public DiversityTarget createTarget(DiversityTarget target) {
         if (target.getTargetPercentage() < 0 || target.getTargetPercentage() > 100)
-            throw new BadRequestException("Invalid percentage");
+            throw new BadRequestException("Target percentage must be between 0 and 100");
         return repository.save(target);
     }
 
     public DiversityTarget updateTarget(Long id, DiversityTarget target) {
-        DiversityTarget existing = getTargetById(id);
+        DiversityTarget existing = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Diversity target not found"));
+
+        if (target.getTargetPercentage() < 0 || target.getTargetPercentage() > 100)
+            throw new BadRequestException("Target percentage must be between 0 and 100");
+
         existing.setTargetYear(target.getTargetYear());
         existing.setTargetPercentage(target.getTargetPercentage());
         existing.setClassification(target.getClassification());
-        return repository.save(existing);
-    }
 
-    public DiversityTarget getTargetById(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Target not found"));
+        return repository.save(existing);
     }
 
     public List<DiversityTarget> getAllTargets() {
@@ -46,7 +47,8 @@ public class DiversityTargetServiceImpl implements DiversityTargetService {
     }
 
     public void deactivateTarget(Long id) {
-        DiversityTarget target = getTargetById(id);
+        DiversityTarget target = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Diversity target not found"));
         target.setActive(false);
         repository.save(target);
     }
