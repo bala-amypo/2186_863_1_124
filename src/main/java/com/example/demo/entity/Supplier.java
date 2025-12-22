@@ -3,6 +3,8 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
+import com.example.demo.entity.PurchaseOrder;
+
 
 @Entity
 @Table(name = "suppliers")
@@ -33,6 +35,8 @@ public class Supplier {
     )
     private Set<DiversityClassification> diversityClassifications;
 
+    @OneToMany(mappedBy = "supplier")
+    private Set<PurchaseOrder> purchaseOrders;
 
     public Supplier() {}
 
