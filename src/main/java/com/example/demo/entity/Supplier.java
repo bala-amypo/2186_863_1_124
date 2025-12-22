@@ -33,8 +33,6 @@ public class Supplier {
     )
     private Set<DiversityClassification> diversityClassifications;
 
-    @OneToMany(mappedBy = "supplier")
-    private Set<PurchaseOrder> purchaseOrders;
 
     public Supplier() {}
 
