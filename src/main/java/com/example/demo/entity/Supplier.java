@@ -1,10 +1,12 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 import java.time.LocalDateTime;
 import java.util.Set;
-import com.example.demo.entity.PurchaseOrder;
-
 
 @Entity
 @Table(name = "suppliers")
@@ -14,11 +16,16 @@ public class Supplier {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Name is required")
     private String name;
 
+    @NotBlank(message = "Email is required")
+    @Email(message = "Email should be valid")
     @Column(unique = true)
     private String email;
 
+    @NotBlank(message = "Registration number is required")
+    @Size(max = 50, message = "Registration number cannot exceed 50 characters")
     private String registrationNumber;
 
     private Boolean isActive;
