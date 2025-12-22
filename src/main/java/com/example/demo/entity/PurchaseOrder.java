@@ -3,6 +3,8 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 @Table(name = "purchase_orders")
@@ -22,10 +24,12 @@ public class PurchaseOrder {
 
     @ManyToOne
     @JoinColumn(name = "supplier_id")
+    @JsonIgnore
     private Supplier supplier;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
+    @JsonIgnore
     private SpendCategory category;
 
     public PurchaseOrder() {}
