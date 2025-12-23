@@ -5,54 +5,47 @@ import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.DiversityClassificationRepository;
 import com.example.demo.service.DiversityClassificationService;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
 public class DiversityClassificationServiceImpl implements DiversityClassificationService {
-    
-    private final DiversityClassificationRepository classificationRepository;
-    
-    public DiversityClassificationServiceImpl(DiversityClassificationRepository classificationRepository) {
-        this.classificationRepository = classificationRepository;
+
+    private final DiversityClassificationRepository repository;
+
+    public DiversityClassificationServiceImpl(DiversityClassificationRepository repository) {
+        this.repository = repository;
     }
-    
+
     @Override
     public DiversityClassification createClassification(DiversityClassification classification) {
-        return classificationRepository.save(classification);
+        classification.setActive(true);
+        return repository.save(classification);
     }
-    
+
     @Override
     public DiversityClassification updateClassification(Long id, DiversityClassification classification) {
-        DiversityClassification existing = getClassificationById(id);
-        
-        if (classification.getCode() != null) {
-            existing.setCode(classification.getCode());
-        }
-        if (classification.getDescription() != null) {
-            existing.setDescription(classification.getDescription());
-        }
-        if (classification.getActive() != null) {
-            existing.setActive(classification.getActive());
-        }
-        
-        return classificationRepository.save(existing);
+        DiversityClassification existing = getById(id);
+        existing.setName(classification.getName());
+        existing.setDescription(classification.getDescription());
+        return repository.save(existing);
     }
-    
+
     @Override
-    public DiversityClassification getClassificationById(Long id) {
-        return classificationRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Classification not found with id: " + id));
+    public DiversityClassification getById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Classification not found"));
     }
-    
+
     @Override
-    public List<DiversityClassification> getAllClassifications() {
-        return classificationRepository.findAll();
+    public List<DiversityClassification> getAll() {
+        return repository.findAll();
     }
-    
+
     @Override
-    public void deactivateClassification(Long id) {
-        DiversityClassification classification = getClassificationById(id);
-        classification.setActive(false);
-        classificationRepository.save(classification);
+    public void deactivate(Long id) {
+        DiversityClassification dc = getById(id);
+        dc.setActive(false);
+        repository.save(dc);
     }
 }

@@ -5,51 +5,46 @@ import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.SpendCategoryRepository;
 import com.example.demo.service.SpendCategoryService;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
 public class SpendCategoryServiceImpl implements SpendCategoryService {
-    
-    private final SpendCategoryRepository categoryRepository;
-    
-    public SpendCategoryServiceImpl(SpendCategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
+
+    private final SpendCategoryRepository repository;
+
+    public SpendCategoryServiceImpl(SpendCategoryRepository repository) {
+        this.repository = repository;
     }
-    
+
     @Override
     public SpendCategory createCategory(SpendCategory category) {
-        return categoryRepository.save(category);
+        category.setActive(true);
+        return repository.save(category);
     }
-    
+
     @Override
     public SpendCategory updateCategory(Long id, SpendCategory category) {
-        SpendCategory existing = getCategoryById(id);
-        
-        if (category.getName() != null) {
-            existing.setName(category.getName());
-        }
-        if (category.getActive() != null) {
-            existing.setActive(category.getActive());
-        }
-        
-        return categoryRepository.save(existing);
+        SpendCategory existing = getById(id);
+        existing.setName(category.getName());
+        return repository.save(existing);
     }
-    
+
     @Override
-    public SpendCategory getCategoryById(Long id) {
-        return categoryRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
+    public SpendCategory getById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
     }
-    
+
     @Override
-    public List<SpendCategory> getAllCategories() {
-        return categoryRepository.findAll();
+    public List<SpendCategory> getAll() {
+        return repository.findAll();
     }
-    
+
     @Override
-    public void deactivateCategory(Long id) {
-        SpendCategory category = getCategoryById(id);
+    public void deactivate(Long id) {
+        SpendCategory category = getById(id);
         category.setActive(false);
-        categoryRepository.save(category);
+        repository.save(category);
     }
 }
