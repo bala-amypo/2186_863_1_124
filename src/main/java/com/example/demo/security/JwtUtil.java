@@ -6,7 +6,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import java.security.Key;
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,14 +15,15 @@ import java.util.Map;
 @Component
 public class JwtUtil {
     
-    private final Key key;
-    private final long expirationMillis;
+    @Value("${jwt.secret:mySecretKeyForJWTTokenGenerationThatIsLongEnoughForHS256Algorithm}")
+    private String secretKey;
     
-    public JwtUtil(
-            @Value("${jwt.secret:mySecretKeyThatIsAtLeast256BitsLongForHS256Algorithm}") String secret,
-            @Value("${jwt.expiration:86400000}") long expirationMillis) {
-        this.key = Keys.hmacShaKeyFor(secret.getBytes());
-        this.expirationMillis = expirationMillis;
+    @Value("${jwt.expiration:86400000}")
+    private long expirationMillis;
+    
+    private SecretKey getSigningKey() {
+        byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
     
     public String generateToken(Long userId, String email, String role) {
@@ -35,7 +37,7 @@ public class JwtUtil {
                 .setSubject(email)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMillis))
-                .signWith(key, SignatureAlgorithm.HS256)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
     
@@ -44,15 +46,11 @@ public class JwtUtil {
     }
     
     public String extractRole(String token) {
-        return (String) extractClaims(token).get("role");
+        return extractClaims(token).get("role", String.class);
     }
     
     public Long extractUserId(String token) {
-        Object userId = extractClaims(token).get("userId");
-        if (userId instanceof Integer) {
-            return ((Integer) userId).longValue();
-        }
-        return (Long) userId;
+        return extractClaims(token).get("userId", Long.class);
     }
     
     public boolean validateToken(String token) {
@@ -66,7 +64,7 @@ public class JwtUtil {
     
     private Claims extractClaims(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(key)
+                .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
