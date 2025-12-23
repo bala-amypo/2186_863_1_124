@@ -7,41 +7,39 @@ import java.util.Set;
 @Entity
 @Table(name = "spend_categories")
 public class SpendCategory {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @Column(nullable = false)
+
+    @Column(nullable = false, unique = true)
     private String name;
-    
-    @Column(nullable = false)
+
     private Boolean active;
-    
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+
+    @OneToMany(mappedBy = "category")
     private Set<PurchaseOrder> purchaseOrders = new HashSet<>();
-    
+
     public SpendCategory() {}
-    
+
     public SpendCategory(String name) {
         this.name = name;
     }
-    
+
     @PrePersist
-    @PreUpdate
-    protected void preSave() {
+    public void preSave() {
         if (this.active == null) {
             this.active = true;
         }
     }
-    
-    // Getters and Setters
+
+    // Getters and setters
+
     public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
+
     public Boolean getActive() { return active; }
     public void setActive(Boolean active) { this.active = active; }
-    public Set<PurchaseOrder> getPurchaseOrders() { return purchaseOrders; }
-    public void setPurchaseOrders(Set<PurchaseOrder> purchaseOrders) { this.purchaseOrders = purchaseOrders; }
 }
