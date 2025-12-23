@@ -8,4 +8,5 @@ import java.util.List;
 @Repository
 public interface DiversityTargetRepository extends JpaRepository<DiversityTarget, Long> {
     List<DiversityTarget> findByTargetYear(int targetYear);
+    List<DiversityTarget> findAll();
 }
