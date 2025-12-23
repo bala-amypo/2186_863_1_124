@@ -2,44 +2,43 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.PurchaseOrder;
 import com.example.demo.service.PurchaseOrderService;
-import org.springframework.http.HttpStatus;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/purchase-orders")
+@RequestMapping("/purchase-orders")
 public class PurchaseOrderController {
-
-    private final PurchaseOrderService service;
-
-    public PurchaseOrderController(PurchaseOrderService service) {
-        this.service = service;
+    
+    private final PurchaseOrderService purchaseOrderService;
+    
+    public PurchaseOrderController(PurchaseOrderService purchaseOrderService) {
+        this.purchaseOrderService = purchaseOrderService;
     }
-
+    
     @PostMapping
-    public ResponseEntity<PurchaseOrder> create(@RequestBody PurchaseOrder po) {
-        return new ResponseEntity<>(service.createPurchaseOrder(po), HttpStatus.CREATED);
+    public ResponseEntity<PurchaseOrder> createPurchaseOrder(@Valid @RequestBody PurchaseOrder purchaseOrder) {
+        return ResponseEntity.ok(purchaseOrderService.createPurchaseOrder(purchaseOrder));
     }
-
+    
     @PutMapping("/{id}")
-    public ResponseEntity<PurchaseOrder> update(@PathVariable Long id, @RequestBody PurchaseOrder po) {
-        return ResponseEntity.ok(service.updatePurchaseOrder(id, po));
+    public ResponseEntity<PurchaseOrder> updatePurchaseOrder(@PathVariable Long id, @RequestBody PurchaseOrder purchaseOrder) {
+        return ResponseEntity.ok(purchaseOrderService.updatePurchaseOrder(id, purchaseOrder));
     }
-
+    
     @GetMapping("/{id}")
-    public ResponseEntity<PurchaseOrder> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.getPurchaseOrderById(id));
+    public ResponseEntity<PurchaseOrder> getPurchaseOrderById(@PathVariable Long id) {
+        return ResponseEntity.ok(purchaseOrderService.getPurchaseOrderById(id));
     }
-
+    
     @GetMapping
-    public ResponseEntity<List<PurchaseOrder>> getAll() {
-        return ResponseEntity.ok(service.getAllPurchaseOrders());
+    public ResponseEntity<List<PurchaseOrder>> getAllPurchaseOrders() {
+        return ResponseEntity.ok(purchaseOrderService.getAllPurchaseOrders());
     }
-
+    
     @GetMapping("/supplier/{supplierId}")
-    public ResponseEntity<List<PurchaseOrder>> getBySupplier(@PathVariable Long supplierId) {
-        return ResponseEntity.ok(service.getPurchaseOrdersBySupplier(supplierId));
+    public ResponseEntity<List<PurchaseOrder>> getPurchaseOrdersBySupplier(@PathVariable Long supplierId) {
+        return ResponseEntity.ok(purchaseOrderService.getPurchaseOrdersBySupplier(supplierId));
     }
 }

@@ -2,46 +2,44 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.DiversityTarget;
 import com.example.demo.service.DiversityTargetService;
-import org.springframework.http.HttpStatus;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/targets")
+@RequestMapping("/targets")
 public class DiversityTargetController {
-
-    private final DiversityTargetService service;
-
-    public DiversityTargetController(DiversityTargetService service) {
-        this.service = service;
+    
+    private final DiversityTargetService targetService;
+    
+    public DiversityTargetController(DiversityTargetService targetService) {
+        this.targetService = targetService;
     }
-
+    
     @PostMapping
-    public ResponseEntity<DiversityTarget> create(@RequestBody DiversityTarget target) {
-        return new ResponseEntity<>(service.createTarget(target), HttpStatus.CREATED);
+    public ResponseEntity<DiversityTarget> createTarget(@Valid @RequestBody DiversityTarget target) {
+        return ResponseEntity.ok(targetService.createTarget(target));
     }
-
+    
     @PutMapping("/{id}")
-    public ResponseEntity<DiversityTarget> update(@PathVariable Long id,
-                                                  @RequestBody DiversityTarget target) {
-        return ResponseEntity.ok(service.updateTarget(id, target));
+    public ResponseEntity<DiversityTarget> updateTarget(@PathVariable Long id, @RequestBody DiversityTarget target) {
+        return ResponseEntity.ok(targetService.updateTarget(id, target));
     }
-
+    
     @GetMapping
-    public ResponseEntity<List<DiversityTarget>> getAll() {
-        return ResponseEntity.ok(service.getAllTargets());
+    public ResponseEntity<List<DiversityTarget>> getAllTargets() {
+        return ResponseEntity.ok(targetService.getAllTargets());
     }
-
+    
     @GetMapping("/year/{year}")
-    public ResponseEntity<List<DiversityTarget>> getByYear(@PathVariable int year) {
-        return ResponseEntity.ok(service.getTargetsByYear(year));
+    public ResponseEntity<List<DiversityTarget>> getTargetsByYear(@PathVariable int year) {
+        return ResponseEntity.ok(targetService.getTargetsByYear(year));
     }
-
+    
     @PutMapping("/{id}/deactivate")
-    public ResponseEntity<Void> deactivate(@PathVariable Long id) {
-        service.deactivateTarget(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> deactivateTarget(@PathVariable Long id) {
+        targetService.deactivateTarget(id);
+        return ResponseEntity.ok().build();
     }
 }
