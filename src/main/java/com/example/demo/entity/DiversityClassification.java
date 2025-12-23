@@ -1,7 +1,6 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,18 +12,19 @@ public class DiversityClassification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @NotBlank(message = "Code is required")
+    @Column(unique = true, nullable = false)
     private String code;
     
-    @NotBlank(message = "Description is required")
+    @Column
     private String description;
     
+    @Column(nullable = false)
     private Boolean active;
     
     @ManyToMany(mappedBy = "diversityClassifications")
     private Set<Supplier> suppliers = new HashSet<>();
     
-    @OneToMany(mappedBy = "classification")
+    @OneToMany(mappedBy = "classification", cascade = CascadeType.ALL)
     private Set<DiversityTarget> targets = new HashSet<>();
     
     public DiversityClassification() {}
@@ -36,7 +36,7 @@ public class DiversityClassification {
     
     @PrePersist
     @PreUpdate
-    public void preSave() {
+    protected void preSave() {
         if (this.active == null) {
             this.active = true;
         }
@@ -45,52 +45,16 @@ public class DiversityClassification {
         }
     }
     
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-    
-    public void setId(Long id) {
-        this.id = id;
-    }
-    
-    public String getCode() {
-        return code;
-    }
-    
-    public void setCode(String code) {
-        this.code = code != null ? code.toUpperCase() : null;
-    }
-    
-    public String getDescription() {
-        return description;
-    }
-    
-    public void setDescription(String description) {
-        this.description = description;
-    }
-    
-    public Boolean getActive() {
-        return active;
-    }
-    
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-    
-    public Set<Supplier> getSuppliers() {
-        return suppliers;
-    }
-    
-    public void setSuppliers(Set<Supplier> suppliers) {
-        this.suppliers = suppliers;
-    }
-    
-    public Set<DiversityTarget> getTargets() {
-        return targets;
-    }
-    
-    public void setTargets(Set<DiversityTarget> targets) {
-        this.targets = targets;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getCode() { return code; }
+    public void setCode(String code) { this.code = code != null ? code.toUpperCase() : null; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    public Boolean getActive() { return active; }
+    public void setActive(Boolean active) { this.active = active; }
+    public Set<Supplier> getSuppliers() { return suppliers; }
+    public void setSuppliers(Set<Supplier> suppliers) { this.suppliers = suppliers; }
+    public Set<DiversityTarget> getTargets() { return targets; }
+    public void setTargets(Set<DiversityTarget> targets) { this.targets = targets; }
 }
