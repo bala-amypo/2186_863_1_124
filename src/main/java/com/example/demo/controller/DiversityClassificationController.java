@@ -2,28 +2,45 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.DiversityClassification;
 import com.example.demo.service.DiversityClassificationService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
-@RequestMapping("/classifications")
+@RequestMapping("/api/classifications")
 public class DiversityClassificationController {
-    
-    private final DiversityClassificationService classificationService;
-    
-    public DiversityClassificationController(DiversityClassificationService classificationService) {
-        this.classificationService = classificationService;
+
+    private final DiversityClassificationService service;
+
+    public DiversityClassificationController(DiversityClassificationService service) {
+        this.service = service;
     }
-    
+
+    @PostMapping
+    public ResponseEntity<DiversityClassification> create(@RequestBody DiversityClassification dc) {
+        return new ResponseEntity<>(service.createClassification(dc), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<DiversityClassification> update(@PathVariable Long id, @RequestBody DiversityClassification dc) {
+        return ResponseEntity.ok(service.updateClassification(id, dc));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<DiversityClassification> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getById(id));
+    }
+
     @GetMapping
-    public ResponseEntity<List<DiversityClassification>> getAllClassifications() {
-        return ResponseEntity.ok(classificationService.getAllClassifications());
+    public ResponseEntity<List<DiversityClassification>> getAll() {
+        return ResponseEntity.ok(service.getAll());
     }
-    
+
     @PutMapping("/{id}/deactivate")
-    public ResponseEntity<Void> deactivateClassification(@PathVariable Long id) {
-        classificationService.deactivateClassification(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Void> deactivate(@PathVariable Long id) {
+        service.deactivate(id);
+        return ResponseEntity.noContent().build();
     }
 }
