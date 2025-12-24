@@ -1,17 +1,14 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.DiversityTarget;
+
 import java.util.List;
 
 public interface DiversityTargetService {
 
     DiversityTarget createTarget(DiversityTarget target);
 
-    DiversityTarget updateTarget(Long id, DiversityTarget target);
+    DiversityTarget getTargetById(Long id);
 
-    List<DiversityTarget> getAll();
-
-    List<DiversityTarget> getTargetsByYear(int year);
-
-    void deactivate(Long id);
+    List<DiversityTarget> getAllTargets();
 }
