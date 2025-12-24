@@ -3,12 +3,10 @@ package com.example.demo.repository;
 import com.example.demo.entity.PurchaseOrder;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import java.util.Optional;
 
 public interface PurchaseOrderRepository
         extends JpaRepository<PurchaseOrder, Long> {
 
-    List<PurchaseOrder> findBySupplier_Id(Long supplierId);
-
-    List<PurchaseOrder> findAll();
+    Optional<PurchaseOrder> findByPoNumber(String poNumber);
 }
