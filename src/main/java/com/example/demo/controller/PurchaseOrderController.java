@@ -2,43 +2,47 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.PurchaseOrder;
 import com.example.demo.service.PurchaseOrderService;
-import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
-@RequestMapping("/purchase-orders")
+@RequestMapping("/api/purchase-orders")
 public class PurchaseOrderController {
-    
-    private final PurchaseOrderService purchaseOrderService;
-    
-    public PurchaseOrderController(PurchaseOrderService purchaseOrderService) {
-        this.purchaseOrderService = purchaseOrderService;
+
+    private final PurchaseOrderService service;
+
+    public PurchaseOrderController(PurchaseOrderService service) {
+        this.service = service;
     }
-    
+
     @PostMapping
-    public ResponseEntity<PurchaseOrder> createPurchaseOrder(@Valid @RequestBody PurchaseOrder purchaseOrder) {
-        return ResponseEntity.ok(purchaseOrderService.createPurchaseOrder(purchaseOrder));
+    public ResponseEntity<PurchaseOrder> create(@RequestBody PurchaseOrder order) {
+        return new ResponseEntity<>(service.createPurchaseOrder(order), HttpStatus.CREATED);
     }
-    
-    @PutMapping("/{id}")
-    public ResponseEntity<PurchaseOrder> updatePurchaseOrder(@PathVariable Long id, @RequestBody PurchaseOrder purchaseOrder) {
-        return ResponseEntity.ok(purchaseOrderService.updatePurchaseOrder(id, purchaseOrder));
-    }
-    
+
     @GetMapping("/{id}")
-    public ResponseEntity<PurchaseOrder> getPurchaseOrderById(@PathVariable Long id) {
-        return ResponseEntity.ok(purchaseOrderService.getPurchaseOrderById(id));
+    public ResponseEntity<PurchaseOrder> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getPurchaseOrderById(id));
     }
-    
+
     @GetMapping
-    public ResponseEntity<List<PurchaseOrder>> getAllPurchaseOrders() {
-        return ResponseEntity.ok(purchaseOrderService.getAllPurchaseOrders());
+    public ResponseEntity<List<PurchaseOrder>> getAll() {
+        return ResponseEntity.ok(service.getAllPurchaseOrders());
     }
-    
-    @GetMapping("/supplier/{supplierId}")
-    public ResponseEntity<List<PurchaseOrder>> getPurchaseOrdersBySupplier(@PathVariable Long supplierId) {
-        return ResponseEntity.ok(purchaseOrderService.getPurchaseOrdersBySupplier(supplierId));
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PurchaseOrder> update(
+            @PathVariable Long id,
+            @RequestBody PurchaseOrder order) {
+        return ResponseEntity.ok(service.updatePurchaseOrder(id, order));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.deletePurchaseOrder(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -1,10 +1,9 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.Supplier;
-import com.example.demo.exception.DuplicateResourceException;
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.SupplierRepository;
 import com.example.demo.service.SupplierService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,31 +19,30 @@ public class SupplierServiceImpl implements SupplierService {
 
     @Override
     public Supplier createSupplier(Supplier supplier) {
-        if (supplierRepository.existsByEmail(supplier.getEmail())) {
-            throw new DuplicateResourceException("Supplier with this email already exists");
-        }
-        supplier.setIsActive(true);
         return supplierRepository.save(supplier);
-    }
-
-    @Override
-    public Supplier updateSupplier(Long id, Supplier supplier) {
-        Supplier existing = getSupplierById(id);
-        existing.setName(supplier.getName());
-        existing.setEmail(supplier.getEmail());
-        existing.setRegistrationNumber(supplier.getRegistrationNumber());
-        return supplierRepository.save(existing);
     }
 
     @Override
     public Supplier getSupplierById(Long id) {
         return supplierRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Supplier not found"));
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Supplier not found with id: " + id));
     }
 
     @Override
     public List<Supplier> getAllSuppliers() {
         return supplierRepository.findAll();
+    }
+
+    @Override
+    public Supplier updateSupplier(Long id, Supplier supplier) {
+        Supplier existing = getSupplierById(id);
+
+        existing.setName(supplier.getName());
+        existing.setEmail(supplier.getEmail());
+        existing.setRegistrationNumber(supplier.getRegistrationNumber());
+
+        return supplierRepository.save(existing);
     }
 
     @Override
