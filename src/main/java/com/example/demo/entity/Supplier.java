@@ -1,8 +1,10 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -13,16 +15,18 @@ public class Supplier {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @NotBlank
     private String name;
 
-    @Column(nullable = false, unique = true)
+    @NotBlank
+    @Email
+    @Column(unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @NotBlank
+    @Column(unique = true)
     private String registrationNumber;
 
-    @Column(nullable = false)
     private Boolean isActive;
 
     private LocalDateTime createdAt;
@@ -30,36 +34,33 @@ public class Supplier {
 
     @ManyToMany
     @JoinTable(
-            name = "supplier_classifications",
-            joinColumns = @JoinColumn(name = "supplier_id"),
-            inverseJoinColumns = @JoinColumn(name = "classification_id")
+        name = "supplier_classifications",
+        joinColumns = @JoinColumn(name = "supplier_id"),
+        inverseJoinColumns = @JoinColumn(name = "classification_id")
     )
-    private Set<DiversityClassification> diversityClassifications = new HashSet<>();
+    private Set<DiversityClassification> diversityClassifications;
 
     @OneToMany(mappedBy = "supplier")
-    private Set<PurchaseOrder> purchaseOrders = new HashSet<>();
+    private Set<PurchaseOrder> purchaseOrders;
 
     public Supplier() {}
 
-    public Supplier(String name, String email, String registrationNumber) {
-        this.name = name;
-        this.email = email;
-        this.registrationNumber = registrationNumber;
-    }
-
     @PrePersist
     public void prePersist() {
-        if (this.isActive == null) {
-            this.isActive = true;
+        if (isActive == null) {
+            isActive = true;
         }
-        if (this.createdAt == null) {
-            this.createdAt = LocalDateTime.now();
-        }
+        createdAt = LocalDateTime.now();
     }
 
-    // Getters and setters
+    @PreUpdate
+    public void preUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 
+    // Getters & Setters
     public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
@@ -76,9 +77,21 @@ public class Supplier {
     public void setIsActive(Boolean active) { isActive = active; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
     public LocalDateTime getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+
+    public Set<DiversityClassification> getDiversityClassifications() {
+        return diversityClassifications;
+    }
+
+    public void setDiversityClassifications(Set<DiversityClassification> diversityClassifications) {
+        this.diversityClassifications = diversityClassifications;
+    }
+
+    public Set<PurchaseOrder> getPurchaseOrders() { return purchaseOrders; }
+    public void setPurchaseOrders(Set<PurchaseOrder> purchaseOrders) {
+        this.purchaseOrders = purchaseOrders;
     }
 }

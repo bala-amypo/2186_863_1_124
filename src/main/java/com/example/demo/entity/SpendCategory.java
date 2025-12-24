@@ -1,7 +1,8 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.util.HashSet;
+import jakarta.validation.constraints.NotBlank;
+
 import java.util.Set;
 
 @Entity
@@ -12,34 +13,36 @@ public class SpendCategory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @NotBlank
+    @Column(unique = true)
     private String name;
 
     private Boolean active;
 
     @OneToMany(mappedBy = "category")
-    private Set<PurchaseOrder> purchaseOrders = new HashSet<>();
+    private Set<PurchaseOrder> purchaseOrders;
 
     public SpendCategory() {}
 
-    public SpendCategory(String name) {
-        this.name = name;
-    }
-
     @PrePersist
-    public void preSave() {
-        if (this.active == null) {
-            this.active = true;
+    public void prePersist() {
+        if (active == null) {
+            active = true;
         }
     }
 
-    // Getters and setters
-
+    // Getters & Setters
     public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
     public Boolean getActive() { return active; }
     public void setActive(Boolean active) { this.active = active; }
+
+    public Set<PurchaseOrder> getPurchaseOrders() { return purchaseOrders; }
+    public void setPurchaseOrders(Set<PurchaseOrder> purchaseOrders) {
+        this.purchaseOrders = purchaseOrders;
+    }
 }

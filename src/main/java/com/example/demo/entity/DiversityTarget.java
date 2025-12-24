@@ -1,6 +1,8 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 
 @Entity
 @Table(name = "diversity_targets")
@@ -12,39 +14,30 @@ public class DiversityTarget {
 
     private int targetYear;
 
+    @Min(0)
+    @Max(100)
     private Double targetPercentage;
 
     private Boolean active;
 
     @ManyToOne
-    @JoinColumn(name = "classification_id")
     private DiversityClassification classification;
 
     public DiversityTarget() {}
 
-    public DiversityTarget(int targetYear,
-                           DiversityClassification classification,
-                           Double targetPercentage) {
-        this.targetYear = targetYear;
-        this.classification = classification;
-        this.targetPercentage = targetPercentage;
-    }
-
     @PrePersist
-    public void preSave() {
-        if (this.active == null) {
-            this.active = true;
+    public void prePersist() {
+        if (active == null) {
+            active = true;
         }
     }
 
-    // Getters and setters
-
+    // Getters & Setters
     public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     public int getTargetYear() { return targetYear; }
-    public void setTargetYear(int targetYear) {
-        this.targetYear = targetYear;
-    }
+    public void setTargetYear(int targetYear) { this.targetYear = targetYear; }
 
     public Double getTargetPercentage() { return targetPercentage; }
     public void setTargetPercentage(Double targetPercentage) {
@@ -54,9 +47,7 @@ public class DiversityTarget {
     public Boolean getActive() { return active; }
     public void setActive(Boolean active) { this.active = active; }
 
-    public DiversityClassification getClassification() {
-        return classification;
-    }
+    public DiversityClassification getClassification() { return classification; }
     public void setClassification(DiversityClassification classification) {
         this.classification = classification;
     }

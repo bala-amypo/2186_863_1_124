@@ -1,6 +1,9 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Positive;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -12,36 +15,28 @@ public class PurchaseOrder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(unique = true)
     private String poNumber;
 
-    @Column(nullable = false)
+    @Positive
     private BigDecimal amount;
 
-    @Column(nullable = false)
+    @PastOrPresent
     private LocalDate dateIssued;
 
     private String notes;
 
     @ManyToOne
-    @JoinColumn(name = "supplier_id")
     private Supplier supplier;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
     private SpendCategory category;
 
     public PurchaseOrder() {}
 
-    public PurchaseOrder(String poNumber, BigDecimal amount, LocalDate dateIssued) {
-        this.poNumber = poNumber;
-        this.amount = amount;
-        this.dateIssued = dateIssued;
-    }
-
-    // Getters and setters
-
+    // Getters & Setters
     public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     public String getPoNumber() { return poNumber; }
     public void setPoNumber(String poNumber) { this.poNumber = poNumber; }
@@ -50,15 +45,14 @@ public class PurchaseOrder {
     public void setAmount(BigDecimal amount) { this.amount = amount; }
 
     public LocalDate getDateIssued() { return dateIssued; }
-    public void setDateIssued(LocalDate dateIssued) {
-        this.dateIssued = dateIssued;
-    }
+    public void setDateIssued(LocalDate dateIssued) { this.dateIssued = dateIssued; }
+
+    public String getNotes() { return notes; }
+    public void setNotes(String notes) { this.notes = notes; }
 
     public Supplier getSupplier() { return supplier; }
     public void setSupplier(Supplier supplier) { this.supplier = supplier; }
 
     public SpendCategory getCategory() { return category; }
-    public void setCategory(SpendCategory category) {
-        this.category = category;
-    }
+    public void setCategory(SpendCategory category) { this.category = category; }
 }
