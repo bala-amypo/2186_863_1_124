@@ -2,44 +2,47 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.Supplier;
 import com.example.demo.service.SupplierService;
-import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
-@RequestMapping("/suppliers")
+@RequestMapping("/api/suppliers")
 public class SupplierController {
-    
-    private final SupplierService supplierService;
-    
-    public SupplierController(SupplierService supplierService) {
-        this.supplierService = supplierService;
+
+    private final SupplierService service;
+
+    public SupplierController(SupplierService service) {
+        this.service = service;
     }
-    
+
     @PostMapping
-    public ResponseEntity<Supplier> createSupplier(@Valid @RequestBody Supplier supplier) {
-        return ResponseEntity.ok(supplierService.createSupplier(supplier));
+    public ResponseEntity<Supplier> createSupplier(@RequestBody Supplier supplier) {
+        return new ResponseEntity<>(service.createSupplier(supplier), HttpStatus.CREATED);
     }
-    
-    @PutMapping("/{id}")
-    public ResponseEntity<Supplier> updateSupplier(@PathVariable Long id, @RequestBody Supplier supplier) {
-        return ResponseEntity.ok(supplierService.updateSupplier(id, supplier));
-    }
-    
+
     @GetMapping("/{id}")
-    public ResponseEntity<Supplier> getSupplierById(@PathVariable Long id) {
-        return ResponseEntity.ok(supplierService.getSupplierById(id));
+    public ResponseEntity<Supplier> getSupplier(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getSupplierById(id));
     }
-    
+
     @GetMapping
     public ResponseEntity<List<Supplier>> getAllSuppliers() {
-        return ResponseEntity.ok(supplierService.getAllSuppliers());
+        return ResponseEntity.ok(service.getAllSuppliers());
     }
-    
-    @PutMapping("/{id}/deactivate")
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Supplier> updateSupplier(
+            @PathVariable Long id,
+            @RequestBody Supplier supplier) {
+        return ResponseEntity.ok(service.updateSupplier(id, supplier));
+    }
+
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deactivateSupplier(@PathVariable Long id) {
-        supplierService.deactivateSupplier(id);
-        return ResponseEntity.ok().build();
+        service.deactivateSupplier(id);
+        return ResponseEntity.noContent().build();
     }
 }
