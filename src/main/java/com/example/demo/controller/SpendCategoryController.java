@@ -2,8 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.SpendCategory;
 import com.example.demo.service.SpendCategoryService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,30 +17,22 @@ public class SpendCategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<SpendCategory> create(@RequestBody SpendCategory category) {
-        return new ResponseEntity<>(service.createCategory(category), HttpStatus.CREATED);
+    public SpendCategory create(@RequestBody SpendCategory category) {
+        return service.createCategory(category);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SpendCategory> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.getCategoryById(id));
+    public SpendCategory getById(@PathVariable Long id) {
+        return service.getCategoryById(id);
     }
 
     @GetMapping
-    public ResponseEntity<List<SpendCategory>> getAll() {
-        return ResponseEntity.ok(service.getAllCategories());
+    public List<SpendCategory> getAll() {
+        return service.getAllCategories();
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<SpendCategory> update(
-            @PathVariable Long id,
-            @RequestBody SpendCategory category) {
-        return ResponseEntity.ok(service.updateCategory(id, category));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deactivate(@PathVariable Long id) {
+    @PutMapping("/{id}/deactivate")
+    public void deactivate(@PathVariable Long id) {
         service.deactivateCategory(id);
-        return ResponseEntity.noContent().build();
     }
 }

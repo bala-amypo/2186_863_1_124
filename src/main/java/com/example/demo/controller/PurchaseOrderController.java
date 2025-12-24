@@ -2,8 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.PurchaseOrder;
 import com.example.demo.service.PurchaseOrderService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,30 +17,17 @@ public class PurchaseOrderController {
     }
 
     @PostMapping
-    public ResponseEntity<PurchaseOrder> create(@RequestBody PurchaseOrder order) {
-        return new ResponseEntity<>(service.createPurchaseOrder(order), HttpStatus.CREATED);
+    public PurchaseOrder create(@RequestBody PurchaseOrder po) {
+        return service.createPurchaseOrder(po);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<PurchaseOrder> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.getPurchaseOrderById(id));
+    @GetMapping("/supplier/{supplierId}")
+    public List<PurchaseOrder> getBySupplier(@PathVariable Long supplierId) {
+        return service.getPurchaseOrdersBySupplier(supplierId);
     }
 
     @GetMapping
-    public ResponseEntity<List<PurchaseOrder>> getAll() {
-        return ResponseEntity.ok(service.getAllPurchaseOrders());
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<PurchaseOrder> update(
-            @PathVariable Long id,
-            @RequestBody PurchaseOrder order) {
-        return ResponseEntity.ok(service.updatePurchaseOrder(id, order));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        service.deletePurchaseOrder(id);
-        return ResponseEntity.noContent().build();
+    public List<PurchaseOrder> getAll() {
+        return service.getAllPurchaseOrders();
     }
 }
