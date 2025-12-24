@@ -1,11 +1,16 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.JwtResponse;
+import com.example.demo.dto.LoginRequest;
+import com.example.demo.dto.RegisterRequest;
 import com.example.demo.entity.UserAccount;
-import com.example.demo.repository.UserAccountRepository;
+import com.example.demo.exception.UnauthorizedException;
+import com.example.demo.security.JwtUtil;
 import com.example.demo.service.UserAccountService;
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,39 +18,59 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final UserAccountService userAccountService;
-    private final UserAccountRepository userAccountRepository;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
 
     public AuthController(UserAccountService userAccountService,
-                          UserAccountRepository userAccountRepository) {
+                          AuthenticationManager authenticationManager,
+                          JwtUtil jwtUtil) {
         this.userAccountService = userAccountService;
-        this.userAccountRepository = userAccountRepository;
+        this.authenticationManager = authenticationManager;
+        this.jwtUtil = jwtUtil;
     }
 
-    // 🔹 Register
     @PostMapping("/register")
-    public ResponseEntity<UserAccount> register(
-            @RequestBody UserAccount user) {
+    public ResponseEntity<JwtResponse> register(@RequestBody RegisterRequest req) {
 
-        return new ResponseEntity<>(
-                userAccountService.createUser(user),
-                HttpStatus.CREATED
+        UserAccount user = new UserAccount();
+        user.setFullName(req.getFullName());
+        user.setEmail(req.getEmail());
+        user.setPassword(req.getPassword());
+        user.setRole(req.getRole());
+
+        UserAccount saved = userAccountService.register(user);
+
+        String token = jwtUtil.generateToken(
+                saved.getId(),
+                saved.getEmail(),
+                saved.getRole()
         );
+
+        return ResponseEntity.ok(new JwtResponse(token));
     }
 
-    // 🔹 Login (simple, no JWT)
     @PostMapping("/login")
-    public ResponseEntity<UserAccount> login(
-            @RequestParam String email,
-            @RequestParam String password) {
+    public ResponseEntity<JwtResponse> login(@RequestBody LoginRequest req) {
 
-        UserAccount user = userAccountRepository.findByEmail(email)
-                .orElseThrow(() ->
-                        new EntityNotFoundException("Invalid email or password"));
-
-        if (!user.getPassword().equals(password)) {
-            throw new EntityNotFoundException("Invalid email or password");
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            req.getEmail(),
+                            req.getPassword()
+                    )
+            );
+        } catch (BadCredentialsException ex) {
+            throw new UnauthorizedException("Invalid credentials");
         }
 
-        return ResponseEntity.ok(user);
+        UserAccount user = userAccountService.findByEmailOrThrow(req.getEmail());
+
+        String token = jwtUtil.generateToken(
+                user.getId(),
+                user.getEmail(),
+                user.getRole()
+        );
+
+        return ResponseEntity.ok(new JwtResponse(token));
     }
 }
