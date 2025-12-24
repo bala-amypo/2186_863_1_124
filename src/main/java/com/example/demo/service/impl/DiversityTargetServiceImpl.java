@@ -1,9 +1,9 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.DiversityTarget;
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.DiversityTargetRepository;
 import com.example.demo.service.DiversityTargetService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,33 +19,36 @@ public class DiversityTargetServiceImpl implements DiversityTargetService {
 
     @Override
     public DiversityTarget createTarget(DiversityTarget target) {
-        target.setActive(true);
         return repository.save(target);
     }
 
     @Override
-    public DiversityTarget updateTarget(Long id, DiversityTarget target) {
-        DiversityTarget existing = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Target not found"));
-        existing.setTargetPercentage(target.getTargetPercentage());
-        existing.setTargetYear(target.getTargetYear());
-        return repository.save(existing);
+    public DiversityTarget getTargetById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() ->
+                        new EntityNotFoundException(
+                                "Target not found with id: " + id));
     }
 
     @Override
-    public List<DiversityTarget> getAll() {
+    public List<DiversityTarget> getAllTargets() {
         return repository.findAll();
     }
 
     @Override
-    public List<DiversityTarget> getTargetsByYear(int year) {
-        return repository.findByTargetYear(year);
+    public DiversityTarget updateTarget(Long id, DiversityTarget target) {
+        DiversityTarget existing = getTargetById(id);
+
+        existing.setTargetYear(target.getTargetYear());
+        existing.setTargetPercentage(target.getTargetPercentage());
+        existing.setClassification(target.getClassification());
+
+        return repository.save(existing);
     }
 
     @Override
-    public void deactivate(Long id) {
-        DiversityTarget target = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Target not found"));
+    public void deactivateTarget(Long id) {
+        DiversityTarget target = getTargetById(id);
         target.setActive(false);
         repository.save(target);
     }
