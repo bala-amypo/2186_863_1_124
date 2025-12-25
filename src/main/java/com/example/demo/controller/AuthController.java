@@ -48,13 +48,13 @@ public class AuthController {
             authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
             );
+            
+            UserAccount user = userAccountService.findByEmailOrThrow(request.getEmail());
+            String token = jwtUtil.generateToken(user.getId(), user.getEmail(), user.getRole());
+            
+            return ResponseEntity.ok(new JwtResponse(token));
         } catch (BadCredentialsException e) {
             throw new UnauthorizedException("Invalid credentials");
         }
-        
-        UserAccount user = userAccountService.findByEmailOrThrow(request.getEmail());
-        String token = jwtUtil.generateToken(user.getId(), user.getEmail(), user.getRole());
-        
-        return ResponseEntity.ok(new JwtResponse(token));
     }
 }

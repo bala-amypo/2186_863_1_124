@@ -9,20 +9,20 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class SwaggerConfig {
-
+    
     @Bean
-    public OpenAPI openAPI() {
+    public OpenAPI customOpenAPI() {
         return new OpenAPI()
-            .info(new Info()
-                .title("Supplier Diversity Tracker API")
-                .version("1.0")
-                .description("API for managing supplier diversity tracking"))
-            .addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"))
-            .components(new io.swagger.v3.oas.models.Components()
-                .addSecuritySchemes("Bearer Authentication",
-                    new SecurityScheme()
-                        .type(SecurityScheme.Type.HTTP)
-                        .scheme("bearer")
-                        .bearerFormat("JWT")));
+                .info(new Info()
+                        .title("Supplier Diversity Tracker API")
+                        .version("1.0")
+                        .description("API for managing supplier diversity tracking"))
+                .addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"))
+                .components(new io.swagger.v3.oas.models.Components()
+                        .addSecuritySchemes("Bearer Authentication",
+                                new SecurityScheme()
+                                        .type(SecurityScheme.Type.HTTP)
+                                        .scheme("bearer")
+                                        .bearerFormat("JWT")));
     }
 }
