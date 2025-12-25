@@ -1,17 +1,10 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.UserAccount;
-import java.util.List;
 
 public interface UserAccountService {
-
-    UserAccount createUser(UserAccount user);
-
-    UserAccount getUserById(Long id);
-
-    List<UserAccount> getAllUsers();
-
-    UserAccount updateUser(Long id, UserAccount user);
-
-    void deleteUser(Long id);
+    UserAccount register(UserAccount user);
+    String login(String email, String password);
+    UserAccount getByEmail(String email);
+    UserAccount findByEmailOrThrow(String email);
 }

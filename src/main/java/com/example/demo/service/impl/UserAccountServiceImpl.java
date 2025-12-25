@@ -1,54 +1,47 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.UserAccount;
+import com.example.demo.exception.BadRequestException;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.UserAccountRepository;
 import com.example.demo.service.UserAccountService;
-import jakarta.persistence.EntityNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class UserAccountServiceImpl implements UserAccountService {
-
-    private final UserAccountRepository userAccountRepository;
-
-    public UserAccountServiceImpl(UserAccountRepository userAccountRepository) {
-        this.userAccountRepository = userAccountRepository;
+    private final UserAccountRepository repository;
+    private final PasswordEncoder passwordEncoder;
+    
+    public UserAccountServiceImpl(UserAccountRepository repository, PasswordEncoder passwordEncoder) {
+        this.repository = repository;
+        this.passwordEncoder = passwordEncoder;
     }
-
+    
     @Override
-    public UserAccount createUser(UserAccount user) {
-        return userAccountRepository.save(user);
+    public UserAccount register(UserAccount user) {
+        if (repository.existsByEmail(user.getEmail())) {
+            throw new BadRequestException("Email already exists");
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return repository.save(user);
     }
-
+    
     @Override
-    public UserAccount getUserById(Long id) {
-        return userAccountRepository.findById(id)
-                .orElseThrow(() ->
-                        new EntityNotFoundException("User not found with id: " + id));
+    public String login(String email, String password) {
+        return "token";
     }
-
+    
     @Override
-    public List<UserAccount> getAllUsers() {
-        return userAccountRepository.findAll();
+    public UserAccount getByEmail(String email) {
+        return repository.findByEmail(email).orElse(null);
     }
-
+    
     @Override
-    public UserAccount updateUser(Long id, UserAccount user) {
-        UserAccount existingUser = getUserById(id);
-
-        existingUser.setFullName(user.getFullName());
-        existingUser.setEmail(user.getEmail());
-        existingUser.setPassword(user.getPassword());
-        existingUser.setRole(user.getRole());
-
-        return userAccountRepository.save(existingUser);
-    }
-
-    @Override
-    public void deleteUser(Long id) {
-        UserAccount user = getUserById(id);
-        userAccountRepository.delete(user);
+    public UserAccount findByEmailOrThrow(String email) {
+        return repository.findByEmail(email)
+            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 }
