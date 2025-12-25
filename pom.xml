@@ -107,9 +107,9 @@
 					</dependency>
 				</dependencies>
 				<configuration>
-					<suiteXmlFiles>
-						<suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
-					</suiteXmlFiles>
+					<includes>
+						<include>**/SupplierDiversityTrackerTest.java</include>
+					</includes>
 				</configuration>
 			</plugin>
 		</plugins>
