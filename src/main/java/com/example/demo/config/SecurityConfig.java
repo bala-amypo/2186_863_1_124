@@ -51,4 +51,4 @@ public class SecurityConfig {
         String secret = "supplier-diversity-secret-key-1234567890";
         return new JwtUtil(secret.getBytes(), 86400000L);
     }
-}`
+}
