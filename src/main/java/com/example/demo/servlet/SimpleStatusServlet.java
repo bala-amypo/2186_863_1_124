@@ -7,10 +7,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 public class SimpleStatusServlet extends HttpServlet {
+    
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        resp.setContentType("text/plain");
-        PrintWriter writer = resp.getWriter();
+    public void doGet(HttpServletRequest request, HttpServletResponse response) 
+            throws IOException {
+        response.setContentType("text/plain");
+        PrintWriter writer = response.getWriter();
         writer.write("Supplier Diversity Tracker is running");
         writer.flush();
     }
