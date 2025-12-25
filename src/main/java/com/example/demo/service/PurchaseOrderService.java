@@ -8,4 +8,5 @@ public interface PurchaseOrderService {
     List<PurchaseOrder> getOrdersBySupplier(Long supplierId);
     List<PurchaseOrder> getOrdersByCategory(Long categoryId);
     List<PurchaseOrder> getPurchaseOrdersBySupplier(Long supplierId);
+    List<PurchaseOrder> getAllPurchaseOrders();
 }
