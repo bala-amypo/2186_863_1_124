@@ -8,5 +8,5 @@ public interface DiversityTargetService {
     List<DiversityTarget> getActiveTargets();
     List<DiversityTarget> getAllTargets();
     List<DiversityTarget> getTargetsByYear(Integer year);
-    void deactivateTarget(Long id);
+    DiversityTarget deactivateTarget(Long id);
 }

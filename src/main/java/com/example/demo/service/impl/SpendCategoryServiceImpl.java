@@ -33,10 +33,10 @@ public class SpendCategoryServiceImpl implements SpendCategoryService {
     }
     
     @Override
-    public void deactivateCategory(Long id) {
+    public SpendCategory deactivateCategory(Long id) {
         SpendCategory category = repository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
         category.setActive(false);
-        repository.save(category);
+        return repository.save(category);
     }
 }

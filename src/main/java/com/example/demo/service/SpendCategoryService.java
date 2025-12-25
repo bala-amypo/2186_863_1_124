@@ -7,5 +7,5 @@ public interface SpendCategoryService {
     SpendCategory createCategory(SpendCategory category);
     List<SpendCategory> getActiveCategories();
     List<SpendCategory> getAllCategories();
-    void deactivateCategory(Long id);
+    SpendCategory deactivateCategory(Long id);
 }
