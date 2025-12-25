@@ -28,10 +28,10 @@ public class DiversityClassificationServiceImpl implements DiversityClassificati
     }
     
     @Override
-    public void deactivateClassification(Long id) {
+    public DiversityClassification deactivateClassification(Long id) {
         DiversityClassification classification = repository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Classification not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Classification not found"));
         classification.setActive(false);
-        repository.save(classification);
+        return repository.save(classification);
     }
 }
