@@ -27,7 +27,7 @@ public class SupplierController {
     
     @GetMapping("/{id}")
     public ResponseEntity<Supplier> getSupplier(@PathVariable Long id) {
-        return ResponseEntity.ok(supplierService.getSupplier(id));
+        return ResponseEntity.ok(supplierService.getSupplierById(id));
     }
     
     @PutMapping("/{id}/deactivate")

@@ -6,6 +6,8 @@ public class RegisterRequest {
     private String password;
     private String role;
     
+    public RegisterRequest() {}
+    
     public String getFullName() { return fullName; }
     public void setFullName(String fullName) { this.fullName = fullName; }
     
