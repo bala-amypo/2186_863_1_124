@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface DiversityTargetRepository extends JpaRepository<DiversityTarget, Long> {
     Optional<DiversityTarget> findByTargetYearAndClassificationId(Integer year, Long classificationId);
     List<DiversityTarget> findByActiveTrue();
-    List<DiversityTarget> findByTargetYear(Integer year);
+    List<DiversityTarget> findByTargetYear(Integer targetYear);
 }
