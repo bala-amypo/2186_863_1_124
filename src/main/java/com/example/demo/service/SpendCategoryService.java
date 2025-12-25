@@ -1,18 +1,11 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.SpendCategory;
-
 import java.util.List;
 
 public interface SpendCategoryService {
-
     SpendCategory createCategory(SpendCategory category);
-
-    SpendCategory getCategoryById(Long id);
-
+    List<SpendCategory> getActiveCategories();
     List<SpendCategory> getAllCategories();
-
-    SpendCategory updateCategory(Long id, SpendCategory category);
-
     void deactivateCategory(Long id);
 }

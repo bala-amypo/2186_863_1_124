@@ -4,14 +4,9 @@ import com.example.demo.entity.DiversityTarget;
 import java.util.List;
 
 public interface DiversityTargetService {
-
     DiversityTarget createTarget(DiversityTarget target);
-
-    DiversityTarget getTargetById(Long id);
-
+    List<DiversityTarget> getActiveTargets();
     List<DiversityTarget> getAllTargets();
-
-    DiversityTarget updateTarget(Long id, DiversityTarget target);
-
+    List<DiversityTarget> getTargetsByYear(Integer year);
     void deactivateTarget(Long id);
 }
