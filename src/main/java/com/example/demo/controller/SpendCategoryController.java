@@ -2,37 +2,26 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.SpendCategory;
 import com.example.demo.service.SpendCategoryService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/categories")
 public class SpendCategoryController {
-
     private final SpendCategoryService service;
-
+    
     public SpendCategoryController(SpendCategoryService service) {
         this.service = service;
     }
-
+    
     @PostMapping
-    public SpendCategory create(@RequestBody SpendCategory category) {
-        return service.createCategory(category);
+    public ResponseEntity<SpendCategory> createCategory(@RequestBody SpendCategory category) {
+        return ResponseEntity.ok(service.createCategory(category));
     }
-
-    @GetMapping("/{id}")
-    public SpendCategory getById(@PathVariable Long id) {
-        return service.getCategoryById(id);
-    }
-
-    @GetMapping
-    public List<SpendCategory> getAll() {
-        return service.getAllCategories();
-    }
-
-    @PutMapping("/{id}/deactivate")
-    public void deactivate(@PathVariable Long id) {
-        service.deactivateCategory(id);
+    
+    @GetMapping("/active")
+    public ResponseEntity<List<SpendCategory>> getActiveCategories() {
+        return ResponseEntity.ok(service.getActiveCategories());
     }
 }
