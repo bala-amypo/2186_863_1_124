@@ -41,10 +41,6 @@ public class DiversityClassificationServiceImpl implements DiversityClassificati
         return repository.findAll();
     }
     
-    @Override
-    public List<DiversityClassification> getActiveClassifications() {
-        return repository.findByActiveTrue();
-    }
     
     @Override
     public DiversityClassification deactivateClassification(Long id) {

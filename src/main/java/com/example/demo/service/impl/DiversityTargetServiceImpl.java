@@ -42,10 +42,6 @@ public class DiversityTargetServiceImpl implements DiversityTargetService {
         return repository.findAll();
     }
     
-    @Override
-    public List<DiversityTarget> getTargetsByYear(Integer year) {
-        return repository.findByTargetYear(year);
-    }
     
     @Override
     public DiversityTarget deactivateTarget(Long id) {
