@@ -34,11 +34,7 @@ public class DiversityClassificationController {
     public ResponseEntity<List<DiversityClassification>> getAllClassifications() {
         return ResponseEntity.ok(service.getAllClassifications());
     }
-    
-    @GetMapping("/active")
-    public ResponseEntity<List<DiversityClassification>> getActiveClassifications() {
-        return ResponseEntity.ok(service.getActiveClassifications());
-    }
+  
     
     @PutMapping("/{id}/deactivate")
     public ResponseEntity<DiversityClassification> deactivateClassification(@PathVariable Long id) {

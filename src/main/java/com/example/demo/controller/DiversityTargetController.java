@@ -34,11 +34,7 @@ public class DiversityTargetController {
     public ResponseEntity<List<DiversityTarget>> getTargetsByYear(@PathVariable Integer year) {
         return ResponseEntity.ok(service.getTargetsByYear(year));
     }
-    
-    @GetMapping("/active")
-    public ResponseEntity<List<DiversityTarget>> getActiveTargets() {
-        return ResponseEntity.ok(service.getActiveTargets());
-    }
+  
     
     @PutMapping("/{id}/deactivate")
     public ResponseEntity<DiversityTarget> deactivateTarget(@PathVariable Long id) {

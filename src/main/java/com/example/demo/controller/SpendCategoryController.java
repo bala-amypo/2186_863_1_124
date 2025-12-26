@@ -34,12 +34,7 @@ public class SpendCategoryController {
     public ResponseEntity<List<SpendCategory>> getAllCategories() {
         return ResponseEntity.ok(service.getAllCategories());
     }
-    
-    @GetMapping("/active")
-    public ResponseEntity<List<SpendCategory>> getActiveCategories() {
-        return ResponseEntity.ok(service.getActiveCategories());
-    }
-    
+   
     @PutMapping("/{id}/deactivate")
     public ResponseEntity<SpendCategory> deactivateCategory(@PathVariable Long id) {
         return ResponseEntity.ok(service.deactivateCategory(id));
