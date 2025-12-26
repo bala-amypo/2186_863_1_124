@@ -36,7 +36,6 @@ public class SpendCategoryServiceImpl implements SpendCategoryService {
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
     }
     
-
     @Override
     public List<SpendCategory> getAllCategories() {
         return repository.findAll();

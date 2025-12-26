@@ -34,7 +34,6 @@ public class DiversityTargetController {
     public ResponseEntity<List<DiversityTarget>> getTargetsByYear(@PathVariable Integer year) {
         return ResponseEntity.ok(service.getTargetsByYear(year));
     }
-  
     
     @PutMapping("/{id}/deactivate")
     public ResponseEntity<DiversityTarget> deactivateTarget(@PathVariable Long id) {

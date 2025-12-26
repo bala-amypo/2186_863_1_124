@@ -41,7 +41,6 @@ public class DiversityClassificationServiceImpl implements DiversityClassificati
         return repository.findAll();
     }
     
-    
     @Override
     public DiversityClassification deactivateClassification(Long id) {
         DiversityClassification classification = repository.findById(id)

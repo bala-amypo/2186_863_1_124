@@ -34,7 +34,6 @@ public class DiversityClassificationController {
     public ResponseEntity<List<DiversityClassification>> getAllClassifications() {
         return ResponseEntity.ok(service.getAllClassifications());
     }
-  
     
     @PutMapping("/{id}/deactivate")
     public ResponseEntity<DiversityClassification> deactivateClassification(@PathVariable Long id) {

@@ -33,15 +33,14 @@ public class DiversityTargetServiceImpl implements DiversityTargetService {
     }
     
     @Override
-    public List<DiversityTarget> getActiveTargets() {
-        return repository.findByActiveTrue();
-    }
-    
-    @Override
     public List<DiversityTarget> getAllTargets() {
         return repository.findAll();
     }
     
+    @Override
+    public List<DiversityTarget> getTargetsByYear(Integer year) {
+        return repository.findByTargetYear(year);
+    }
     
     @Override
     public DiversityTarget deactivateTarget(Long id) {
