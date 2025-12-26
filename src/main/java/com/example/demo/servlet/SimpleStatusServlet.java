@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 
 public class SimpleStatusServlet extends HttpServlet {
     
+   
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws IOException {
