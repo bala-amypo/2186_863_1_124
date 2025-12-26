@@ -23,6 +23,16 @@ public class DiversityTargetServiceImpl implements DiversityTargetService {
     }
     
     @Override
+    public DiversityTarget updateTarget(Long id, DiversityTarget target) {
+        DiversityTarget existing = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Target not found"));
+        existing.setTargetYear(target.getTargetYear());
+        existing.setTargetPercentage(target.getTargetPercentage());
+        existing.setClassification(target.getClassification());
+        return repository.save(existing);
+    }
+    
+    @Override
     public List<DiversityTarget> getActiveTargets() {
         return repository.findByActiveTrue();
     }

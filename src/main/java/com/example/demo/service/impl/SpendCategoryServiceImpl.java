@@ -23,6 +23,20 @@ public class SpendCategoryServiceImpl implements SpendCategoryService {
     }
     
     @Override
+    public SpendCategory updateCategory(Long id, SpendCategory category) {
+        SpendCategory existing = getCategoryById(id);
+        existing.setName(category.getName());
+        existing.setDescription(category.getDescription());
+        return repository.save(existing);
+    }
+    
+    @Override
+    public SpendCategory getCategoryById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+    }
+    
+    @Override
     public List<SpendCategory> getActiveCategories() {
         return repository.findByActiveTrue();
     }
