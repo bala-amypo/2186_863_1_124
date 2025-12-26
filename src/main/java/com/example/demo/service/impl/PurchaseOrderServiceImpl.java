@@ -88,9 +88,4 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
     public List<PurchaseOrder> getPurchaseOrdersBySupplier(Long supplierId) {
         return purchaseOrderRepository.findBySupplier_Id(supplierId);
     }
-    
-    @Override
-    public List<PurchaseOrder> getPurchaseOrdersByCategory(Long categoryId) {
-        return purchaseOrderRepository.findByCategoryId(categoryId);
-    }
 }
