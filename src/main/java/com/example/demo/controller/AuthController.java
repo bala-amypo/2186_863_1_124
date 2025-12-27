@@ -27,20 +27,20 @@ public class AuthController {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
     }
+    
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
-
-    UserAccount user = new UserAccount();
-    user.setFullName(request.getFullName());
-    user.setEmail(request.getEmail());
-    user.setPassword(request.getPassword());
-    user.setRole(request.getRole());
-
-    userAccountService.register(user);
-
-    return ResponseEntity.ok("User registered successfully. Please login.");
-}
-
+    public ResponseEntity<JwtResponse> register(@RequestBody RegisterRequest request) {
+        UserAccount user = new UserAccount();
+        user.setFullName(request.getFullName());
+        user.setEmail(request.getEmail());
+        user.setPassword(request.getPassword());
+        user.setRole(request.getRole());
+        
+        UserAccount saved = userAccountService.register(user);
+        String token = jwtUtil.generateToken(saved.getId(), saved.getEmail(), saved.getRole());
+        
+        return ResponseEntity.ok(new JwtResponse(token));
+    }
     
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody LoginRequest request) {
